@@ -1,0 +1,87 @@
+
+
+find /usr -type f -exec md5sum {} \; >> MD5SUM &
+
+f=open("MD5SUM", 'r') 
+
+keypairs = []
+
+map(lambda x: keypairs.append(x[:-1].split('  ')), f.readlines())
+
+
+
+>>> for y in keypairs:
+>>>     col.insert({'file':y[1] , 'md5sum': y[0]})
+
+
+
+
+mongos> db.runCommand( { removeshard : "192.168.11.14:10000" } );
+{
+	"msg" : "draining started successfully",
+	"state" : "started",
+	"shard" : "shard0000",
+	"ok" : 1
+}
+mongos> 
+
+
+mongos> db.runCommand( { removeshard : "192.168.11.14:10000" } );
+{
+	"msg" : "draining ongoing",
+	"state" : "ongoing",
+	"remaining" : {
+		"chunks" : NumberLong(0),
+		"dbs" : NumberLong(1)
+	},
+	"ok" : 1
+}
+mongos> 
+
+# stuck to ongoing unless we movePrimary!!! 
+
+> db.printShardingStatus()
+--- Sharding Status --- 
+  sharding version: { "_id" : 1, "version" : 3 }
+  shards:
+      { "_id" : "shard0000", "draining" : true, "host" : "192.168.11.14:10000" }
+      { "_id" : "shard0002", "host" : "192.168.11.14:10001" }
+      { "_id" : "shard0003", "host" : "192.168.11.15:10000" }
+  databases:
+	{ "_id" : "admin", "partitioned" : false, "primary" : "config" }
+	{ "_id" : "my", "partitioned" : true, "primary" : "shard0002" }
+		my.file chunks:
+			{ "file" : { $minKey : 1 } } -->> { "file" : { $maxKey : 1 } } on : shard0002 { "t" : 3000, "i" : 0 }
+	{ "_id" : "test", "partitioned" : false, "primary" : "shard0000" }
+
+# stuck to ongoing unless we movePrimary!!! 
+
+> db.runCommand( { movePrimary: "test", to: "shard0002" } ) 
+{ "primary " : "shard0002:192.168.11.14:10001", "ok" : 1 }
+> db.runCommand( { removeshard : "192.168.11.14:10000" } );
+{
+	"msg" : "removeshard completed successfully",
+	"state" : "completed",
+	"shard" : "shard0000",
+	"ok" : 1
+}
+> 
+
+
+
+----------
+> db.places.insert({ _id : original_id , name :  "Broadway Center" , url : "bc.example.net" } )
+> db.people.insert({ name : "Erin", places_id : original_id , url : "bc.example.net/Erin" } ) 
+> db.people.find_one()
+Fri Jun 29 11:41:11 TypeError: db.people.find_one is not a function (shell):0
+> db.people.find()
+{ "_id" : ObjectId("4fed863ba492651512f74b7a"), "name" : "Erin", "places_id" : ObjectId("4fed85d5a492651512f74b79"), "url" : "bc.example.net/Erin" }
+> db.places.remove()
+> db.people.find()
+{ "_id" : ObjectId("4fed863ba492651512f74b7a"), "name" : "Erin", "places_id" : ObjectId("4fed85d5a492651512f74b79"), "url" : "bc.example.net/Erin" }
+> 
+> db.places.find()
+> 
+
+
+

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+steps=(1-get-patch-database-and-utils 2-upload-patch-database-and-utils 3-download-patches-r2 4-upload-patches-r2)
+
+#pre check
+for i in ${steps[*]}; do 
+	if [ ! -e "${i}" ]; then
+		echo $i step missing
+		exit 1
+	fi
+done
+
+
+#do it. Do it.
+for i in ${steps[*]}; do
+        echo $i
+        ./${i}
+        if [ $? -ne 0 ]; then
+                step $i failed
+                break
+        fi
+done
+

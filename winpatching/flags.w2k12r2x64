@@ -1,0 +1,10 @@
+    --no_nt4
+    --no_w2k
+    --no_xp
+    --no_w2k3
+    --no_w2k3x64
+    --no_w2k8
+    --no_w2k8x64
+    --no_w2k8r2x64
+    --no_w2k8r2ia64
+    --no_w2k12x64

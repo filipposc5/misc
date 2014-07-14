@@ -1,0 +1,4 @@
+#!/bin/bash
+/opt/opsware/mm_wordbot/util/populate-opsware-update-library $(cat flags.nothing flags.dlonly) $*
+exit $?
+

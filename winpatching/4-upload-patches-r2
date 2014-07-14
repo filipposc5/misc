@@ -1,0 +1,3 @@
+#!/bin/bash
+/opt/opsware/mm_wordbot/util/populate-opsware-update-library $(cat flags.w2k12r2x64 flags.uploadafterdownload) $*
+exit $?

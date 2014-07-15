@@ -1,0 +1,24 @@
+#!/bin/bash
+
+valid_plats=$(cat flags.nothing | cut -d_ -f2)
+
+function usage {
+	echo "Usage: $0 <platform>"
+	echo
+	echo valid platforms:
+	echo $valid_plats | tr ' ' '\n' | sed 's/^/  /'
+	exit 1
+}
+if [ x"$1" == "x" ]; then 
+	usage
+fi
+
+echo "${valid_plats} " | grep -q "${1} " &>/dev/null
+
+if [ $? -ne 0 ]; then
+	echo "$1 is not a valid platform"
+	usage
+fi
+
+
+grep -v "${1}\$" flags.nothing >> "flags.${1}"
